@@ -36,6 +36,14 @@ from plotly.subplots import make_subplots
 from plotly.offline import plot, iplot
 
 from prettytable import PrettyTable
+import os
+from itertools import (takewhile,repeat)
+
+# Function needed for line counting
+def rawincount(filename):
+    f = open(filename, 'rb')
+    bufgen = takewhile(lambda x: x, (f.raw.read(1024*1024) for _ in repeat(None)))
+    return sum( buf.count(b'\n') for buf in bufgen )
 
 # Config:
 # Setup
@@ -61,8 +69,26 @@ else:
     print("Invalid option, exitting...")
     exit()
 
+print()
+file_stats = os.stat(filename)
+file_size = round(file_stats.st_size / (1024 * 1024) , 2)
+line_count = rawincount(filename)
 
-dataframe = pd.read_csv(filename , low_memory=False)
+print("Your file is {} MB and has {} lines in it\n".format(file_size, line_count))
+print("If your CSV Files are larger than 5MB then I recommend that you split the CSV up into sections to speed up data navigation")
+large_file = input("How many lines would you like in each section? (press enter to skip this):\n")
+
+if(large_file == ""):
+    dataframe = pd.read_csv(filename , low_memory=False)
+
+else:
+    dataframe_list = []
+    for chunk in pd.read_csv(filename , low_memory=False, chunksize = int(large_file)):
+        dataframe_list.append(chunk)
+
+    chunk_index = input("You have {} chunks, which chunk would you like to inspect? (from 1 - {})\n".format(len(dataframe_list) , len(dataframe_list)))
+    dataframe = dataframe_list[int(chunk_index) - 1]
+    
 # Dataset is now stored in a Pandas Dataframe
 
 # Might make better UI in future, Tool selection:
