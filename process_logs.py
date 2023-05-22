@@ -35,3 +35,40 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from plotly.offline import plot, iplot
+
+
+# Globals
+key_name_dict = {
+  'time(ms)' : 'time_ms' ,
+  'BAP(V)' : 'Boost_Absolute_pressure__Raw_Sensor_voltage' ,
+  'BARO(kPa)' : 'Barometric_Pressure_kPa' ,
+  'ACT(°C)' : 'Air_Charge_Temperature_C' ,
+  'APP1 [APP_D](%)' : 'Accelerator_pedal_D_percent' ,
+  'APP2 [APP_E](%)' : 'Accelerator_pedal_E_percent' ,
+  'APP_D(%)' : 'Accelerator_pedal_position_D_percent' ,
+  'APP_E(%)' : 'Accelerator_pedal_position_E_percent' ,
+  'BOOST_PRES(%)' : 'BOOST_PRES_actuator_percent' ,
+  'BPA_OUT(%)' : 'BOOST_PRES_actuator_OUT_percent' ,
+  'BPA_POS(%)' : 'BOOST_PRES_actuator_POS_measured_percent' ,
+  'CACRP(kPa)' : 'Corrected_Air_Conditioning_Refrigerant_Pressure_kPa' ,
+  'CBACB1(%)' : 'Comanded_Boost_Actuator_Control_Bank_1_percent' ,
+  'CET(Nm)' : 'Calculated_Engine_Torque_Nm' ,
+  'DMP(kPa)' : 'Demanded_Manifold_Pressure_kPa' ,
+  'DP_DPF(kPa)' : 'Exhaust_Gas_Differential_Pressure_kPa' ,
+  'EGT13(°C)' : 'Exhaust_Gas_Temp_C' ,
+  'EOT(°C)' : 'Engine_Oil_Temperature_C' ,
+  'FRP(kPa)' : 'Fuel_Rail_Pressure_kPa' ,
+  'FRPD(kPa)' : 'Fuel_Rail_Pressure_Desired_kPa' ,
+  'IAT(°C)' : 'Intake_Air_Temp_C' ,
+  'LOAD(%)' : 'LOAD_percent' ,
+  'LOW_OIL' : 'LOW_OIL' ,
+  'LP_FUEL_SW' : 'Low_Pressure_FUEL_System_Switch' ,
+  'MAF(g/s)' : 'Mass_Air_Flow_g_per_s' ,
+  'MAP(kPa)' : 'Manifold_Absolute_Pressure_kPa' ,
+  'RPM(1/min)' : 'RPM__per_min' ,
+  'SELTESTDTC( )' : 'Diagnostic_Trouble_Codes' ,
+  'TAC_PCT(%)' : 'Demanded_Throttle_actuator_Control_percent' ,
+  'TURBO_BYP_MES(%)' : 'TURBO_Bypass_Valve_position_Measured_percent' ,
+  'VNTP(%)' : 'Variable_Nozzle_Turbo_Position_percent' ,
+  'WG_POS(V)' : 'Waste_Gate_Position_sensor_V' ,
+}
