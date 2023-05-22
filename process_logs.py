@@ -41,6 +41,33 @@ from plotly.subplots import make_subplots
 from plotly.offline import plot, iplot
 
 
+# Config:
+# Setup
+
+print('This file needs to be configured, choose between using local files or files stored on Google Drive')
+option = input("Please input 'local' or 'Google':\n")
+
+if(option == 'local'):
+    filename = input("Please insert filename:\n")
+    
+elif(option == 'Google'):
+    link = input("Please insert the Google Drive Sharing Link:\n")
+    # Assumes link is in the format 'https://drive.google.com/file/d/some_id/view?usp=share_link
+    fluff , id_fluff = link.split('/d/')
+    id , fluff = id_fluff.split('/')
+
+    # Create local file 
+    filename = 'Filename.csv'
+    downloaded = drive.CreateFile({'id':id}) 
+    downloaded.GetContentFile(filename)
+
+else:
+    print("Invalid option, exitting...")
+    exit()
+
+
+dataframe = pd.read_csv(filename , low_memory=False)
+# Dataset is now stored in a Pandas Dataframe
 # Globals
 key_name_dict = {
   'time(ms)' : 'time_ms' ,
@@ -77,20 +104,12 @@ key_name_dict = {
   'WG_POS(V)' : 'Waste_Gate_Position_sensor_V' ,
 }
 
-# Program Operations:
-
-dataframe = pd.read_csv(filename , low_memory=False)
-# Dataset is now stored in a Pandas Dataframe
-
+# Data Cleaning
 dataframe.rename(columns = key_name_dict, inplace = True)
 print("Available metrics:")
 print(dataframe.columns)
 
-
-# Make graph
-# Interactive Graph setup
-trace = []
-fig = make_subplots(specs=[[{"secondary_y": True}]])
+# Program Operations:
 
 # Graph RPM
 fig.add_trace( 
