@@ -123,6 +123,23 @@ if(bool_build_turbo_lut == True):
 
     # Add a column which represents the difference between Demanded_Manifold_Pressure_kPa & Manifold_Absolute_Pressure_kPa (this is for interest sake, if needed)
     turbo_dataframe['Manifold_Absolute_Pressure_Differential_kPa'] = turbo_dataframe['Demanded_Manifold_Pressure_kPa'] - turbo_dataframe['Manifold_Absolute_Pressure_kPa']
+
+    # Now build your LUT
+    # Group the data by RPM, into 500 rmp increments, first one doesn't make sense from 500rpm since idle is at 800rpm
+    turbo_df_rpm_list = []
+
+    df_1000_rpm = turbo_dataframe.loc[(turbo_dataframe['RPM__per_min'] < 1000) & (turbo_dataframe['RPM__per_min'] >= 796)]
+    turbo_df_rpm_list.append([df_1000_rpm])
+
+    for index in range(1000,4000,500):
+        new_rpm_df = turbo_dataframe.loc[(turbo_dataframe['RPM__per_min'] < (index + 500)) & (turbo_dataframe['RPM__per_min'] >= index)]
+        turbo_df_rpm_list.append([new_rpm_df])
+
+    # Now split by engine torque ranges (100Nm increments)
+    for rpm_split in range(0, len(turbo_df_rpm_list)):
+        for torque in range(100,600,100):
+            new_rpm_df = turbo_df_rpm_list[rpm_split][0].loc[(turbo_df_rpm_list[rpm_split][0]['Calculated_Engine_Torque_Nm'] < (torque)) & (turbo_df_rpm_list[rpm_split][0]['Calculated_Engine_Torque_Nm'] >= (torque - 100))]
+            turbo_df_rpm_list[rpm_split].append(new_rpm_df)
 if(bool_display_graphs == True):
     print("Available metrics:")
     print(dataframe.columns)
