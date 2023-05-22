@@ -61,6 +61,7 @@ else:
     print("Invalid option, exitting...")
     exit()
 
+line_count = rawincount(filename)
 
 dataframe = pd.read_csv(filename , low_memory=False)
 # Dataset is now stored in a Pandas Dataframe
