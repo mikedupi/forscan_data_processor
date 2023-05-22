@@ -106,11 +106,13 @@ key_name_dict = {
 
 # Data Cleaning
 dataframe.rename(columns = key_name_dict, inplace = True)
-print("Available metrics:")
-print(dataframe.columns)
 
 # Program Operations:
+if(bool_build_turbo_lut == True):
 if(bool_display_graphs == True):
+    print("Available metrics:")
+    print(dataframe.columns)
+    print()
     # Make graph
     # Interactive Graph setup
     trace = []
