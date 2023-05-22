@@ -35,6 +35,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from plotly.offline import plot, iplot
 
+from prettytable import PrettyTable
 
 # Config:
 # Setup
@@ -140,6 +141,32 @@ if(bool_build_turbo_lut == True):
         for torque in range(100,600,100):
             new_rpm_df = turbo_df_rpm_list[rpm_split][0].loc[(turbo_df_rpm_list[rpm_split][0]['Calculated_Engine_Torque_Nm'] < (torque)) & (turbo_df_rpm_list[rpm_split][0]['Calculated_Engine_Torque_Nm'] >= (torque - 100))]
             turbo_df_rpm_list[rpm_split].append(new_rpm_df)
+
+    row_list = ["Measured RPM & Engine Torque"]
+    for torque_index in range(1, len(turbo_df_rpm_list[0])):
+        row_list.append("{}Nm - {}Nm".format((torque_index-1)* 100 , (torque_index)* 100))
+
+    # First row in table represents columns, this is done using the PrettyTable constructor function
+    tab = PrettyTable(row_list)
+
+    # Now add each row to the table
+    for rpm_index in range(0, len(turbo_df_rpm_list)):
+        row_list = ["{} - {} rpm".format((rpm_index+1)* 500 , (rpm_index+2)* 500)]
+
+        for torque_index in range(1, len(turbo_df_rpm_list[rpm_index])):
+            df_in_question = turbo_df_rpm_list[rpm_index][torque_index]
+
+            calc_dmp = df_in_question.loc[:, 'Demanded_Manifold_Pressure_kPa'].describe()["max"]
+            calc_map = df_in_question.loc[:, 'Manifold_Absolute_Pressure_kPa'].describe()["max"]
+
+            row_list.append("{} / {} ".format(calc_dmp , calc_map))
+        
+        tab.add_row(row_list)
+    
+    # Print your table
+    print("Maximum Turbo Boost from log data, in the format DMP/MAP")
+    print(tab)
+
 if(bool_display_graphs == True):
     print("Available metrics:")
     print(dataframe.columns)
