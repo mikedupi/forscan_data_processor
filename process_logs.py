@@ -85,3 +85,117 @@ dataframe = pd.read_csv(filename , low_memory=False)
 dataframe.rename(columns = key_name_dict, inplace = True)
 print("Available metrics:")
 print(dataframe.columns)
+
+
+# Make graph
+# Interactive Graph setup
+trace = []
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Graph RPM
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.RPM__per_min,
+    name = "RPM__per_min",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=True
+)
+# Graph Engine Load
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.LOAD_percent,
+    name = "LOAD_percent",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=False
+)
+
+# Graph Measured Manifold Pressure (Turbo Boost)
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.Manifold_Absolute_Pressure_kPa,
+    name = "Manifold_Absolute_Pressure_kPa",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ), secondary_y=False
+)
+
+# Graph Desired Manifold Pressure (Turbo Boost)
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.Demanded_Manifold_Pressure_kPa,
+    name = "Demanded_Manifold_Pressure_kPa",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=False
+)
+
+# Graph Turbo Boost Pressure Percentage
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.BOOST_PRES_actuator_percent,
+    name = "BOOST_PRES_actuator_percent",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=False
+)
+
+# Graph Turbo Boost Pressure Percentage
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.BOOST_PRES_actuator_OUT_percent,
+    name = "BOOST_PRES_actuator_OUT_percent",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=False
+)
+
+# Graph Turbo Boost Pressure Percentage
+fig.add_trace( 
+    go.Scatter(
+    x = dataframe.time_ms ,   
+    y = dataframe.BOOST_PRES_actuator_POS_measured_percent,
+    name = "BOOST_PRES_actuator_POS_measured_percent",
+    hoverinfo = 'y+name',
+    mode = "lines+markers",
+    marker = dict( size = 2 ),
+    line = dict( width = 0.4 ),
+    
+  ) , secondary_y=False
+)
+
+# make look pretty
+fig['layout'].update(height = 800, width = 1500, title = "OBD Data Graph" ,showlegend=True )
+fig.update_yaxes(title_text="<b>Other</b>", secondary_y=False)
+fig.update_yaxes(title_text="<b>RPM</b>", secondary_y=True)
+fig.update_layout(autotypenumbers='convert types')
+
+
+
+# show us what you got
+fig.show()
