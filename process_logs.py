@@ -1,3 +1,7 @@
+# Config:
+# Setup
+
+filename = ''
 
 
 # Includes
@@ -72,3 +76,12 @@ key_name_dict = {
   'VNTP(%)' : 'Variable_Nozzle_Turbo_Position_percent' ,
   'WG_POS(V)' : 'Waste_Gate_Position_sensor_V' ,
 }
+
+# Program Operations:
+
+dataframe = pd.read_csv(filename , low_memory=False)
+# Dataset is now stored in a Pandas Dataframe
+
+dataframe.rename(columns = key_name_dict, inplace = True)
+print("Available metrics:")
+print(dataframe.columns)
