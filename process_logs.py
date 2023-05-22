@@ -109,6 +109,20 @@ dataframe.rename(columns = key_name_dict, inplace = True)
 
 # Program Operations:
 if(bool_build_turbo_lut == True):
+    # Make new DF, only holds columns needed for turbo config Look Up Table (LUT)
+
+    columns_of_interest = ['time_ms','Calculated_Engine_Torque_Nm','Demanded_Manifold_Pressure_kPa','Manifold_Absolute_Pressure_kPa','RPM__per_min']
+    turbo_dataframe = dataframe[columns_of_interest].copy()
+
+    # Remove starting not-populated values
+    # In my case, RPM is logged last and therefore just removing those ones makes my entire DF clean
+    turbo_dataframe = (turbo_dataframe[turbo_dataframe.RPM__per_min != '-'])
+
+    # Ensure types are correct as we need to do math
+    turbo_dataframe = turbo_dataframe.astype({"time_ms":"int","Calculated_Engine_Torque_Nm":"float" , "Demanded_Manifold_Pressure_kPa":"float" , "Manifold_Absolute_Pressure_kPa":"float" , "RPM__per_min":"int"})
+
+    # Add a column which represents the difference between Demanded_Manifold_Pressure_kPa & Manifold_Absolute_Pressure_kPa (this is for interest sake, if needed)
+    turbo_dataframe['Manifold_Absolute_Pressure_Differential_kPa'] = turbo_dataframe['Demanded_Manifold_Pressure_kPa'] - turbo_dataframe['Manifold_Absolute_Pressure_kPa']
 if(bool_display_graphs == True):
     print("Available metrics:")
     print(dataframe.columns)
