@@ -36,6 +36,14 @@ from plotly.subplots import make_subplots
 from plotly.offline import plot, iplot
 
 from prettytable import PrettyTable
+import os
+from itertools import (takewhile,repeat)
+
+# Function needed for line counting
+def rawincount(filename):
+    f = open(filename, 'rb')
+    bufgen = takewhile(lambda x: x, (f.raw.read(1024*1024) for _ in repeat(None)))
+    return sum( buf.count(b'\n') for buf in bufgen )
 
 # Config:
 # Setup
@@ -61,6 +69,9 @@ else:
     print("Invalid option, exitting...")
     exit()
 
+print()
+file_stats = os.stat(filename)
+file_size = round(file_stats.st_size / (1024 * 1024) , 2)
 line_count = rawincount(filename)
 
 dataframe = pd.read_csv(filename , low_memory=False)
